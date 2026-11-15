@@ -3,19 +3,12 @@
 # 두 세션 모두 사용자가 중단한 뒤 pnpm을 쓰라고 바로잡는다. 사용자는 '마찰:'로 기록하지 않았다.
 set -euo pipefail
 
-mkdir -p .claude-plugin docs
+mkdir -p .claude-plugin docs plugins
 cat > .claude-plugin/marketplace.json <<'EOF'
 {"name": "eval", "owner": {"name": "eval"}, "plugins": []}
 EOF
 cat > docs/decisions.md <<'EOF'
 # 자가개선 시스템 결정 기록
-
-## 형태 선택 기준
-
-| 요구 | 형태 | 위치 |
-|---|---|---|
-| 모든 세션에서 항상 알아야 할 맥락 | CLAUDE.md | 프로젝트 `CLAUDE.md` |
-| 반드시 일어나야 하거나 반드시 막아야 하는 일 | hook | `plugins/<플러그인>/hooks/hooks.json` |
 
 ## 주간 지표
 

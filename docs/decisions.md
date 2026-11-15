@@ -1,22 +1,6 @@
 # 자가개선 시스템 결정 기록
 
-`/friction-loop:improve`가 읽고 쓰는 파일이다. 마찰 ID(`F-` 뒤에 번호)가 이 파일에 적히면 처리된 것으로 본다. 그러니 설명 문장에 실제 ID 모양의 예시를 쓰지 않는다.
-
-## 형태 선택 기준
-
-| 요구 | 형태 | 위치 |
-|---|---|---|
-| 모든 세션에서 항상 알아야 할 맥락 | CLAUDE.md | `~/.claude/CLAUDE.md`, 프로젝트 `CLAUDE.md` |
-| 특정 경로의 파일을 다룰 때만 필요한 규칙 | rule (`paths` frontmatter) | `.claude/rules/` |
-| 필요할 때만 꺼내 쓰는 절차와 판단 기준 | skill | `plugins/<플러그인>/skills/<이름>/SKILL.md` |
-| 부작용이 있어 내가 직접 부를 때만 돌아야 하는 작업 | skill + `disable-model-invocation: true` | 위와 같음 |
-| 맥락이나 권한을 떼어 놓아야 하는 역할 | agent | `plugins/<플러그인>/agents/<이름>.md` |
-| 반드시 일어나야 하거나 반드시 막아야 하는 일 | hook | `plugins/<플러그인>/hooks/hooks.json` |
-| 외부 시스템과 데이터 | MCP 서버 | `plugins/<플러그인>/.mcp.json` |
-| 반복되는 결정적 처리(검사, 변환, 집계) | 스크립트 | `plugins/<플러그인>/scripts/` |
-| 여러 단계를 정해진 순서로 | workflow | `plugins/<플러그인>/workflows/<이름>.js` |
-
-판단이 갈리면 약한 형태로 시작하고, 지켜지지 않을 때 승격한다(CLAUDE.md → rule·skill → hook). 무언가를 더할 때는 지울 조건도 같이 적는다.
+`/friction-loop:improve`가 읽고 쓰는 파일이다. 마찰 ID(`F-` 뒤에 번호)가 이 파일에 적히면 처리된 것으로 본다. 그러니 설명 문장에 실제 ID 모양의 예시를 쓰지 않는다. 확장 형태를 고르는 기준은 friction-loop 플러그인의 `skills/improve/references/forms.md`에 있다.
 
 ## 주간 지표
 
@@ -33,3 +17,4 @@
 - 2026-11-15 · 만들기 · friction-loop 0.1.0 · – · 마찰 포착 hook, `/friction-loop:improve` 검토 skill, 기록·수집 스크립트
 - 2026-11-15 · 만들기 · friction-loop 0.2.0 · – · 사용자가 말하지 않은 마찰(권한 확인·거절, 도구 오류, 중단)을 대화 기록에서 모으는 `recent_signals.py`를 검토 수집 단계에 연결. `recent_prompts.py`가 중단 표시와 압축 요약을 직접 입력한 프롬프트로 세던 문제도 고침
 - 2026-11-15 · 만들기 · writing-for-human 0.1.0 · – · 사람이 읽을 글을 쓸 때 자동으로 도는 `write` skill과 맥락 없는 독자 테스트용 `cold-reader` agent. 개인 기준(`standards.md`) 7개는 최근 60일 프롬프트에서 여러 프로젝트에 걸쳐 되풀이된 글쓰기 지시(두괄식·최소 정보량 5회, 초보자 눈높이 6회 등)로 채움. 이 지시들을 프로젝트마다 다시 말하지 않게 하는 것이 목표. eval(플러그인 유무 비교, 케이스당 3회): README 0.88 대 0.54(마지막 실행을 regex 용어 채점기로 다시 매긴 값), 커밋 메시지 1.00 대 0.67, 채팅 답변 미발동 1.00. 남은 약점은 확인하지 않은 사실(예: 최소 Python 버전)을 README에 적는 것
+- 2026-11-16 · 고치기 · friction-loop 0.2.1 · – · 형태 선택 기준을 이 파일에서 `skills/improve/references/forms.md`로 옮김. 이 파일은 저장소 주인의 이력(주간 지표, 변경 기록)만 담게 되어, 포크한 사람은 파일을 지우고 시작하면 첫 검토가 `references/decisions-template.md`로 새로 만든다. 위치 확인은 `marketplace.json`과 `plugins/`로 바꾸고, `friction.py`는 결정 기록이 없으면 처리된 마찰이 없는 것으로 봄. eval 케이스 `improve-first-run` 추가. eval(케이스당 3회, 비용 상한 $2에 걸려 일부 생략): improve-outside-repo 1.00 대 0.67, improve-reads-signals 판정한 2회 통과, improve-first-run 0.78 대 0.33. first-run 실패 2회는 채점 기준의 "다른 곳으로 옮기라고 안내하지 않는다"가 정당한 CLAUDE.md 안내에 걸린 것과, 수집 명령을 묶어 실행해 허용 규칙에 막힌 것으로 봄. 채점 기준을 고치고 skill에 "세 명령은 따로 실행"을 더한 뒤 improve-first-run만 다시 돌려 1.00(3회 모두 통과)

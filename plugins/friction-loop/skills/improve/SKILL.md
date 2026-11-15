@@ -13,11 +13,13 @@ disable-model-invocation: true
 
 ## 0. 위치 확인
 
-현재 작업 폴더에 `.claude-plugin/marketplace.json`과 `docs/decisions.md`가 둘 다 있어야 한다. 하나라도 없으면 아무것도 읽거나 바꾸지 말고, 자가개선 시스템 저장소(마켓플레이스 저장소)로 옮겨서 다시 실행하라고 안내한 뒤 멈춘다.
+현재 작업 폴더에 `.claude-plugin/marketplace.json`과 `plugins/` 폴더가 둘 다 있어야 한다. 하나라도 없으면 아무것도 읽거나 바꾸지 말고, 자가개선 시스템 저장소(마켓플레이스 저장소)로 옮겨서 다시 실행하라고 안내한 뒤 멈춘다.
+
+결정 기록 `docs/decisions.md`는 없어도 된다. 포크 직후처럼 처음 검토하는 저장소이므로, 처리된 마찰이 없는 것으로 보고 계속한다. 파일은 5단계에서 만든다.
 
 ## 1. 수집
 
-다음 세 명령을 실행한다. 모두 읽기만 한다.
+다음 세 명령을 하나씩 따로 실행한다. 모두 읽기만 한다. 다른 명령과 묶거나 `echo` 구분선을 끼우지 않는다. 묶은 명령은 `python3` 허용 규칙에 맞지 않아 권한 확인이 뜨거나 막힌다.
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/friction.py" --data "${CLAUDE_PLUGIN_DATA}" list --open --decisions docs/decisions.md
@@ -27,7 +29,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/recent_signals.py" --days <검토 기간>
 
 앞의 둘은 사용자가 말한 것(마찰 기록, 직접 입력한 프롬프트)이다. 마지막은 사용자가 말하지 않은 것, 즉 직접 답한 권한 확인, 권한 거절(사용자·규칙·자동 모드·hook), 도구 오류, 중단이다. 신호마다 도구와 입력이 붙고, `→` 줄은 신호 뒤에 사용자가 처음 한 말이다.
 
-`docs/decisions.md`에서 '형태 선택 기준', '주간 지표', 최근 '변경 기록'도 읽는다. 지난번에 보류하거나 기각한 것을 다시 제안하지 않기 위해서다.
+`docs/decisions.md`가 있으면 '주간 지표'와 최근 '변경 기록'도 읽는다. 지난번에 보류하거나 기각한 것을 다시 제안하지 않기 위해서다.
 
 ## 2. 묶기
 
@@ -51,7 +53,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/recent_signals.py" --days <검토 기간>
 | 승격 | 지침(CLAUDE.md, 메모리)으로는 지켜지지 않아 더 강한 형태가 필요하다 |
 | 지우기 | 쓰이지 않거나 다른 확장과 겹친다 |
 
-담을 형태는 `docs/decisions.md`의 '형태 선택 기준'을 따른다. 판단이 갈리면 약한 형태를 고른다.
+담을 형태는 `${CLAUDE_PLUGIN_ROOT}/skills/improve/references/forms.md`의 형태 선택 기준을 따른다. 판단이 갈리면 약한 형태를 고른다.
 
 제안은 다음 열을 가진 표 하나로 보여 준다.
 
@@ -74,7 +76,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/recent_signals.py" --days <검토 기간>
 
 ## 5. 기록
 
-`docs/decisions.md`를 고친다.
+`docs/decisions.md`를 고친다. 파일이 없으면 `${CLAUDE_PLUGIN_ROOT}/skills/improve/references/decisions-template.md`를 그대로 복사해 만든 뒤 고친다.
 
 - '변경 기록'에 반영한 것, 보류한 것, 기각한 것을 한 줄씩 추가한다. 처리한 마찰 ID를 반드시 적는다. ID가 적힌 마찰은 다음 검토부터 열린 목록에서 빠진다.
 - '주간 지표'에 이번 주 행을 추가한다. '신호' 칸에는 `recent_signals.py` 첫 줄의 신호 수를 적는다.

@@ -7,7 +7,7 @@
   stats [--decisions FILE]
 
 데이터 폴더: --data DIR, 없으면 CLAUDE_PLUGIN_DATA 환경 변수.
-마찰 ID가 결정 기록 파일(docs/decisions.md)에 적히면 처리된 것으로 본다.
+마찰 ID가 결정 기록 파일(docs/decisions.md)에 적히면 처리된 것으로 본다. 파일이 없으면 처리된 마찰도 없다.
 """
 import argparse
 import datetime as dt
@@ -68,10 +68,9 @@ def append_entry(d, text, cwd="", session_id="", source="manual"):
 
 
 def resolved_ids(decisions):
-    if not decisions:
+    # 결정 기록이 아직 없으면(포크 직후 첫 검토) 처리된 마찰도 없다. 파일은 검토의 기록 단계가 만든다
+    if not decisions or not os.path.exists(decisions):
         return set()
-    if not os.path.exists(decisions):
-        raise RuntimeError(f"결정 기록 파일이 없습니다: {decisions}")
     with open(decisions, encoding="utf-8") as f:
         return set(ID_RE.findall(f.read()))
 
