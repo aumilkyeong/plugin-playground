@@ -81,4 +81,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/recent_signals.py" --days <검토 기간>
 - '변경 기록'에 반영한 것, 보류한 것, 기각한 것을 한 줄씩 추가한다. 처리한 마찰 ID를 반드시 적는다. ID가 적힌 마찰은 다음 검토부터 열린 목록에서 빠진다.
 - '주간 지표'에 이번 주 행을 추가한다. '신호' 칸에는 `recent_signals.py` 첫 줄의 신호 수를 적는다.
 
-마지막으로 바뀐 것을 한 단락으로 요약하고, `/reload-plugins`로 반영하라고 안내한다. 이 저장소를 로컬 경로 마켓플레이스로 설치했다면 플러그인이 제자리에서 로드되므로 그것으로 충분하다. GitHub 같은 원격 마켓플레이스에서 설치했다면 먼저 변경을 push하고 `claude plugin update friction-loop@aumilkyeong`를 실행해야 한다.
+마지막으로 바뀐 것을 한 단락으로 요약하고, 설치 방식에 맞춰 반영하는 법을 안내한다. 어느 방식으로 설치했는지 모르면 두 경우를 모두 보여 준다.
+
+- 이 저장소를 로컬 경로 마켓플레이스로 설치했다면 플러그인이 제자리에서 로드되므로 `/reload-plugins`만 실행하면 된다.
+- GitHub 같은 원격 마켓플레이스에서 설치했다면 먼저 변경을 커밋해 push한다. 그 마켓플레이스의 자동 업데이트가 켜져 있으면 다음 세션을 시작할 때 새 버전을 받고, 그 세션에서 `/reload-plugins`를 실행하면 바로 적용된다. 꺼져 있으면 바꾼 플러그인마다 `claude plugin update <플러그인>@<마켓플레이스>`를 실행한 뒤 `/reload-plugins`를 실행한다. 마켓플레이스 이름은 `.claude-plugin/marketplace.json`의 `"name"`이다.

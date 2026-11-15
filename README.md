@@ -4,7 +4,7 @@ Claude Code 플러그인 모음이다. 중심인 friction-loop는 Claude Code를
 
 | 플러그인 | 버전 | 하는 일 |
 |---|---|---|
-| [`friction-loop`](plugins/friction-loop/README.md) | 0.2.1 | 불편한 순간을 한 줄로 기록하고, 주간 검토로 확장을 만들고 고치고 지운다 |
+| [`friction-loop`](plugins/friction-loop/README.md) | 0.2.2 | 불편한 순간을 한 줄로 기록하고, 주간 검토로 확장을 만들고 고치고 지운다 |
 | [`writing-for-human`](plugins/writing-for-human/README.md) (선택) | 0.1.0 | Claude가 README, PR 설명, 커밋 메시지처럼 사람이 읽을 글을 쓸 때 독자부터 정하고, 대화 맥락 없이 초안만 읽는 보조 Claude에게 시험해 고치게 한다 |
 
 friction-loop는 이렇게 쓴다.
@@ -82,6 +82,25 @@ claude plugin install writing-for-human@aumilkyeong           # 선택
 
 writing-for-human은 원본 설치본을 그대로 써도 된다. 그 플러그인의 글쓰기 기준 목록(`standards.md`, 사용자에게 지적받은 글쓰기 실패와 해법)도 주간 검토로 내게 맞춰 키우려면, friction-loop처럼 원본을 지우고 내 사본에서 다시 설치한다.
 
+### 3. 새 버전 받기
+
+원본(`@aumilkyeong`)을 설치했다면 새 버전을 직접 받아야 한다. `aumilkyeong`은 Anthropic 공식 마켓플레이스가 아니어서 자동 업데이트가 기본으로 꺼져 있다.
+
+- **그때그때 받기:** 플러그인마다 실행한다.
+
+  ```bash
+  claude plugin update friction-loop@aumilkyeong
+  claude plugin update writing-for-human@aumilkyeong
+  ```
+
+- **자동으로 받기:** Claude Code 세션에서 `/plugin`을 열고, Marketplaces 탭에서 `aumilkyeong`을 골라 Enable auto-update를 누른다. 그러면 세션을 시작할 때마다 새 버전을 받는다.
+
+어느 쪽이든 받은 버전은 `/reload-plugins`를 실행하거나 새 세션을 열어야 적용된다.
+
+자동 업데이트를 켜기 전에 알아 둘 점이 있다. friction-loop의 hook은 프롬프트마다 샌드박스 밖에서 사용자 권한으로 돈다. 자동 업데이트를 켜면 원작자가 앞으로 바꾸는 내용을 검토 없이 그 권한으로 실행하게 된다.
+
+내 사본을 로컬 폴더로 설치했다면 자동 업데이트와 상관없다. 플러그인이 사본 폴더에서 바로 로드되기 때문이다. 원본의 새 변경은 2단계 끝의 Sync fork로 받는다.
+
 ## 작동 방식
 
 마찰은 사용자가 직접 남긴 기록과 대화 기록에 남은 신호, 두 길로 모인다. 주간 검토는 둘을 함께 묶어 제안하고, 승인한 결과를 결정 기록에 남겨 다음 검토의 입력으로 삼는다.
@@ -128,7 +147,6 @@ flowchart LR
 ## 알려진 제약
 
 - 검증한 범위가 좁다. hook 스크립트를 직접 실행하면 1단계의 메시지가 나오지만, 실제 세션에서 `마찰:`을 입력해 기록을 남겨 본 적은 아직 없다. 주간 검토는 가짜 대화 기록으로 만든 eval 케이스로만 돌려 봤다. 2026-11-16 0.2.1 실행에서 세 케이스 모두 통과했다. `improve-reads-signals`는 비용 상한 때문에 판정 1번을 건너뛰었다. 결정 기록 없는 첫 검토를 보는 `improve-first-run`은 채점 기준과 skill 문장을 고친 뒤 다시 돌려 3번 모두 통과했고, 그 수정 뒤에 다시 돌린 것은 이 케이스뿐이다. writing-for-human의 eval 점수는 [결정 기록](docs/decisions.md)에 있다.
-- `aumilkyeong`은 Anthropic 공식 마켓플레이스가 아니어서 자동 업데이트가 기본으로 꺼져 있다. 새 버전은 `claude plugin update friction-loop@aumilkyeong`으로 받거나, `/plugin`의 Marketplaces 탭에서 자동 업데이트를 켠다.
 - `claude plugin eval`은 early access 기능이고 실행할 때마다 모델 사용 비용이 든다.
 - 샌드박스(Claude가 실행하는 명령이 건드릴 수 있는 파일과 네트워크를 제한하는 Claude Code 기능)가 켜진 세션에서는 두 가지가 막힌다.
   - Bash의 `.git` 쓰기(`git commit` 등). 승인을 받아 샌드박스 밖에서 실행하거나 터미널에서 직접 실행한다.
