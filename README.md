@@ -5,7 +5,8 @@ Claude Code 플러그인 모음이다. 중심인 friction-loop는 Claude Code를
 | 플러그인 | 버전 | 하는 일 |
 |---|---|---|
 | [`friction-loop`](plugins/friction-loop/README.md) | 0.2.2 | 불편한 순간을 한 줄로 기록하고, 주간 검토로 확장을 만들고 고치고 지운다 |
-| [`writing-for-human`](plugins/writing-for-human/README.md) (선택) | 0.1.0 | Claude가 README, PR 설명, 커밋 메시지처럼 사람이 읽을 글을 쓸 때 독자부터 정하고, 대화 맥락 없이 초안만 읽는 보조 Claude에게 시험해 고치게 한다 |
+| [`writing-for-human`](plugins/writing-for-human/README.md) (선택) | 0.1.1 | Claude가 README, PR 설명, 커밋 메시지처럼 사람이 읽을 글을 쓸 때 독자부터 정하고, 대화 맥락 없이 초안만 읽는 보조 Claude에게 시험해 고치게 한다 |
+| [`visualize-idea`](plugins/visualize-idea/README.md) (선택) | 0.1.0 | Claude가 아이디어를 도식으로 그릴 때 관계에 맞는 형식을 고르고, 그려진 그림을 이미지로 확인하고 맥락 없는 보조 Claude에게 보여 시험해 고치게 한다 |
 
 friction-loop는 이렇게 쓴다.
 
@@ -24,6 +25,7 @@ friction-loop는 이렇게 쓴다.
 claude plugin marketplace add aumilkyeong/plugin-playground   # 처음 한 번
 claude plugin install friction-loop@aumilkyeong
 claude plugin install writing-for-human@aumilkyeong           # 선택
+claude plugin install visualize-idea@aumilkyeong              # 선택
 ```
 
 **상태 (2026-11-15):** 시작 단계다. 실제 세션에서 마찰을 기록하거나 주간 검토를 돌려 본 적은 아직 없고, 스크립트 실행과 eval로만 확인했다([알려진 제약](#알려진-제약)). Claude Code 2.1.311, Python 3.9.6에서 확인했다.
@@ -91,6 +93,7 @@ writing-for-human은 원본 설치본을 그대로 써도 된다. 그 플러그�
   ```bash
   claude plugin update friction-loop@aumilkyeong
   claude plugin update writing-for-human@aumilkyeong
+  claude plugin update visualize-idea@aumilkyeong
   ```
 
 - **자동으로 받기:** Claude Code 세션에서 `/plugin`을 열고, Marketplaces 탭에서 `aumilkyeong`을 골라 Enable auto-update를 누른다. 그러면 세션을 시작할 때마다 새 버전을 받는다.
@@ -206,9 +209,14 @@ plugin-playground/
 │   │   ├── scripts/                  # friction.py(기록·조회), recent_prompts.py·recent_signals.py(대화 기록 수집)
 │   │   ├── skills/improve/           # /friction-loop:improve 주간 검토, 형태 선택 기준, 결정 기록 틀
 │   │   └── evals/                    # 변경마다 재현 케이스가 쌓인다
-│   └── writing-for-human/            # 사람이 읽을 글 쓰기 → plugins/writing-for-human/README.md
-│       ├── skills/write/             # 쓰는 절차와 점검 목록, 개인 기준(standards.md)
-│       ├── agents/cold-reader.md     # 맥락 없는 독자 테스트
+│   ├── writing-for-human/            # 사람이 읽을 글 쓰기 → plugins/writing-for-human/README.md
+│   │   ├── skills/write/             # 쓰는 절차와 점검 목록, 개인 기준(standards.md)
+│   │   ├── agents/cold-reader.md     # 맥락 없는 독자 테스트
+│   │   └── evals/
+│   └── visualize-idea/               # 아이디어 도식화 → plugins/visualize-idea/README.md
+│       ├── skills/visualize/         # 그리는 절차, 형식·점검·매체 기준, 개인 기준(standards.md)
+│       ├── agents/cold-viewer.md     # 맥락 없는 시청자 테스트
+│       ├── scripts/                  # render.py(그림을 PNG로), textwidth.py(텍스트 도식 폭 검사)
 │       └── evals/
 ├── docs/
 │   └── decisions.md                  # 결정 기록: 이 저장소 주인의 주간 지표와 변경 기록

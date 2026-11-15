@@ -1,0 +1,14 @@
+{
+  "name": "visualize-idea",
+  "displayName": "Visualize Idea",
+  "version": "0.1.0",
+  "description": "아이디어를 도식으로 보일 때 관계에 맞는 형식을 고르고, 그려진 결과를 렌더해 맥락 없는 시청자로 시험해 고친다",
+  "author": {
+    "name": "aumilkyeong",
+    "url": "https://github.com/aumilkyeong"
+  },
+  "homepage": "https://github.com/aumilkyeong/plugin-playground/tree/main/plugins/visualize-idea",
+  "repository": "https://github.com/aumilkyeong/plugin-playground",
+  "license": "MIT",
+  "keywords": ["diagram", "visualization", "mermaid", "svg", "korean"]
+}

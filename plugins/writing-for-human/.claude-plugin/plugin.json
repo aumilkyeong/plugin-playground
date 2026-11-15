@@ -1,7 +1,7 @@
 {
   "name": "writing-for-human",
   "displayName": "Writing for Human",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "사람이 읽을 글(문서, README, PR 설명, 커밋 메시지)을 독자와 목적부터 정해 쓰고, 맥락 없는 독자로 시험해 고친다",
   "author": {
     "name": "aumilkyeong",

@@ -19,6 +19,13 @@
       "description": "사람이 읽을 글을 독자와 목적부터 정해 쓰고, 맥락 없는 독자로 시험해 고친다",
       "category": "productivity",
       "keywords": ["writing", "documentation", "plain-language", "korean"]
+    },
+    {
+      "name": "visualize-idea",
+      "source": "./plugins/visualize-idea",
+      "description": "아이디어를 도식으로 보일 때 관계에 맞는 형식을 고르고, 그려진 결과를 맥락 없는 시청자로 시험해 고친다",
+      "category": "productivity",
+      "keywords": ["diagram", "visualization", "mermaid", "svg", "korean"]
     }
   ]
 }
