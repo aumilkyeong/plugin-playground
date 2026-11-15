@@ -1,0 +1,14 @@
+{
+  "name": "friction-loop",
+  "displayName": "Friction Loop",
+  "version": "0.1.0",
+  "description": "'마찰:'로 시작하는 메시지를 기록하고, /friction-loop:improve 주간 검토로 확장을 만들고 고치고 지운다",
+  "author": {
+    "name": "aumilkyeong",
+    "url": "https://github.com/aumilkyeong"
+  },
+  "homepage": "https://github.com/aumilkyeong/plugin-playground/tree/main/plugins/friction-loop",
+  "repository": "https://github.com/aumilkyeong/plugin-playground",
+  "license": "MIT",
+  "keywords": ["self-improvement", "friction", "review", "hooks"]
+}

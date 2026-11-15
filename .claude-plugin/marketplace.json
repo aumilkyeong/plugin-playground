@@ -1,0 +1,17 @@
+{
+  "name": "aumilkyeong",
+  "owner": {
+    "name": "aumilkyeong",
+    "url": "https://github.com/aumilkyeong"
+  },
+  "description": "쓰면 쓸수록 나아지는 개인용 Claude Code 확장 시스템",
+  "plugins": [
+    {
+      "name": "friction-loop",
+      "source": "./plugins/friction-loop",
+      "description": "불편한 순간을 한 줄로 기록하고, 주간 검토로 확장을 만들고 고치고 지우는 자가개선 루프",
+      "category": "productivity",
+      "keywords": ["self-improvement", "friction", "review", "hooks"]
+    }
+  ]
+}
