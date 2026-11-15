@@ -2,11 +2,12 @@
 
 쓰면 쓸수록 나아지는 개인용 Claude Code 확장 시스템을 키우는 저장소다. Claude Code 플러그인 마켓플레이스 `aumilkyeong`이면서, 그 시스템을 설계하는 문서를 함께 둔다.
 
-**상태 (2026-11-15):** `friction-loop` 0.1.0 · 시작 단계(첫 주간 검토 전) · Claude Code 2.1.311, Python 3.9.6에서 확인
+**상태 (2026-11-15):** `friction-loop` 0.2.0, `writing-for-human` 0.1.0 · 시작 단계(첫 주간 검토 전) · Claude Code 2.1.311, Python 3.9.6에서 확인
 
 ```bash
 claude plugin marketplace add aumilkyeong/plugin-playground
 claude plugin install friction-loop@aumilkyeong
+claude plugin install writing-for-human@aumilkyeong   # 선택: 사람이 읽을 글의 품질
 ```
 
 - 불편한 순간에 `마찰: <무엇이 불편했나>`를 입력하면 기록된다. Claude에게 가지 않아 토큰이 들지 않는다.
@@ -106,12 +107,16 @@ claude --plugin-dir ./plugins/friction-loop
 plugin-playground/
 ├── .claude-plugin/marketplace.json   # 마켓플레이스 'aumilkyeong' 카탈로그
 ├── plugins/
-│   └── friction-loop/                # 자가개선 루프 플러그인 → plugins/friction-loop/README.md
-│       ├── .claude-plugin/plugin.json
-│       ├── hooks/hooks.json          # 마찰 포착 hook
-│       ├── scripts/                  # friction.py(기록·조회), recent_prompts.py·recent_signals.py(대화 기록 수집)
-│       ├── skills/improve/SKILL.md   # /friction-loop:improve 주간 검토
-│       └── evals/                    # 변경마다 재현 케이스가 쌓인다
+│   ├── friction-loop/                # 자가개선 루프 플러그인 → plugins/friction-loop/README.md
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── hooks/hooks.json          # 마찰 포착 hook
+│   │   ├── scripts/                  # friction.py(기록·조회), recent_prompts.py·recent_signals.py(대화 기록 수집)
+│   │   ├── skills/improve/SKILL.md   # /friction-loop:improve 주간 검토
+│   │   └── evals/                    # 변경마다 재현 케이스가 쌓인다
+│   └── writing-for-human/            # 사람이 읽을 글 쓰기 → plugins/writing-for-human/README.md
+│       ├── skills/write/             # 쓰는 절차와 점검 목록, 개인 기준(standards.md)
+│       ├── agents/cold-reader.md     # 맥락 없는 독자 테스트
+│       └── evals/
 ├── docs/
 │   └── decisions.md                  # 형태 선택 기준, 주간 지표, 변경 기록
 └── LICENSE
@@ -122,6 +127,7 @@ plugin-playground/
 | 플러그인 | 버전 | 하는 일 | 구성 요소 |
 |---|---|---|---|
 | [`friction-loop`](plugins/friction-loop/README.md) | 0.2.0 | 마찰 포착과 주간 자가개선 검토 | hook 1, skill 1, 스크립트 3, eval 케이스 2 |
+| [`writing-for-human`](plugins/writing-for-human/README.md) | 0.1.0 | 사람이 읽을 글을 독자부터 설계하고 맥락 없는 독자로 시험 | skill 1, agent 1, eval 케이스 3 |
 
 ## 문서
 

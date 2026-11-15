@@ -12,6 +12,13 @@
       "description": "불편한 순간을 한 줄로 기록하고, 주간 검토로 확장을 만들고 고치고 지우는 자가개선 루프",
       "category": "productivity",
       "keywords": ["self-improvement", "friction", "review", "hooks"]
+    },
+    {
+      "name": "writing-for-human",
+      "source": "./plugins/writing-for-human",
+      "description": "사람이 읽을 글을 독자와 목적부터 정해 쓰고, 맥락 없는 독자로 시험해 고친다",
+      "category": "productivity",
+      "keywords": ["writing", "documentation", "plain-language", "korean"]
     }
   ]
 }
