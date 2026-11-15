@@ -17,7 +17,7 @@ claude plugin install friction-loop@aumilkyeong
 
 장기 목표는 **직관적이고 강력한 개인용 자가개선 시스템**이다.
 
-- **직관적:** 사용자가 할 일은 기록 한 줄과 승인 한 번뿐이다. 찾고 묶고 제안하는 일은 시스템이 한다.
+- **직관적:** 사용자가 할 일은 기록 한 줄과 승인 한 번뿐이다. 찾고 묶고 제안하는 일은 시스템이 하고, 기록하지 않은 마찰도 대화 기록에서 찾아낸다.
 - **강력한:** skill, hook, agent, rule 등 어떤 형태의 확장이든 만들고 고치고 지울 수 있고, 모든 변경은 eval로 검증한다.
 - **자가개선:** 이 시스템의 본체는 부품이 아니라 개선 루프다. 다음에 무엇을 만들지는 루프에 쌓인 기록이 정한다.
 
@@ -32,7 +32,7 @@ claude plugin install friction-loop@aumilkyeong
 ```mermaid
 flowchart LR
   A["'마찰: …' 입력"] -->|UserPromptSubmit hook| B[("마찰 기록<br>friction.jsonl")]
-  C[("대화 기록<br>~/.claude/projects")] --> D
+  C[("대화 기록<br>프롬프트 · 권한 · 오류 · 중단")] --> D
   B --> D["/friction-loop:improve<br>묶기 · 형태 선택"]
   D --> E{"제안 표<br>번호 승인"}
   E -->|승인한 것만| F["plugins/ 변경<br>+ eval 케이스"]
@@ -43,7 +43,7 @@ flowchart LR
 | 단계 | 하는 일 | 담당 |
 |---|---|---|
 | 포착 | `마찰:`로 시작하는 프롬프트를 기록하고 막는다 | `hooks/hooks.json`, `scripts/friction.py` |
-| 수집 | 열린 마찰과 최근 N일 직접 입력한 프롬프트를 모은다 | `scripts/friction.py`, `scripts/recent_prompts.py` |
+| 수집 | 열린 마찰, 최근 N일 직접 입력한 프롬프트, 사용자가 말하지 않은 신호(권한 확인·거절, 도구 오류, 중단)를 모은다 | `scripts/friction.py`, `scripts/recent_prompts.py`, `scripts/recent_signals.py` |
 | 제안 | 원인이 같은 것끼리 묶고 만들기·고치기·승격·지우기 중 하나와 담을 형태를 고른다 | `skills/improve/SKILL.md` |
 | 반영 | 승인한 번호만 `plugins/`에 반영하고 eval 케이스를 더한다 | `/friction-loop:improve` |
 | 기록 | 처리한 마찰 ID와 주간 지표를 남긴다. ID가 적힌 마찰은 다음 검토에서 빠진다 | `docs/decisions.md` |
@@ -109,7 +109,7 @@ plugin-playground/
 │   └── friction-loop/                # 자가개선 루프 플러그인 → plugins/friction-loop/README.md
 │       ├── .claude-plugin/plugin.json
 │       ├── hooks/hooks.json          # 마찰 포착 hook
-│       ├── scripts/                  # friction.py(기록·조회), recent_prompts.py(대화 기록 수집)
+│       ├── scripts/                  # friction.py(기록·조회), recent_prompts.py·recent_signals.py(대화 기록 수집)
 │       ├── skills/improve/SKILL.md   # /friction-loop:improve 주간 검토
 │       └── evals/                    # 변경마다 재현 케이스가 쌓인다
 ├── docs/
@@ -121,7 +121,7 @@ plugin-playground/
 
 | 플러그인 | 버전 | 하는 일 | 구성 요소 |
 |---|---|---|---|
-| [`friction-loop`](plugins/friction-loop/README.md) | 0.1.0 | 마찰 포착과 주간 자가개선 검토 | hook 1, skill 1, 스크립트 2, eval 케이스 1 |
+| [`friction-loop`](plugins/friction-loop/README.md) | 0.2.0 | 마찰 포착과 주간 자가개선 검토 | hook 1, skill 1, 스크립트 3, eval 케이스 2 |
 
 ## 문서
 
@@ -129,17 +129,17 @@ plugin-playground/
 
 ## 지금 다루는 범위
 
-`friction-loop` 0.1.0은 자가개선 시스템에 필요한 여러 역량을 얇게 관통하는 첫 조각이다.
+`friction-loop` 0.2.0은 자가개선 시스템에 필요한 여러 역량을 얇게 관통하는 첫 조각이다.
 
-| 역량 | 0.1.0에서 하는 일 |
+| 역량 | 0.2.0에서 하는 일 |
 |---|---|
 | 확장 형태 선택 | `docs/decisions.md`의 형태 선택 기준표 |
 | Skill 설계 | 직접 부를 때만 도는 `/friction-loop:improve` |
 | 수명주기 훅 | `UserPromptSubmit` 마찰 포착 |
 | 매니페스트, 개인 마켓플레이스 | `plugin.json`, 마켓플레이스 `aumilkyeong` |
 | 개발 루프, 정적 검증 | `--plugin-dir`, `validate --strict` 통과 |
-| 행동 평가 | eval 케이스 1개(저장소 밖 실행 차단) |
-| 마찰 수집과 개선 루프 | 포착 → 검토 → 반영 → 기록 |
+| 행동 평가 | eval 케이스 2개(저장소 밖 실행 차단, 기록하지 않은 마찰 찾기) |
+| 마찰 수집과 개선 루프 | 포착(직접 기록) + 수집(대화 기록의 프롬프트와 신호) → 검토 → 반영 → 기록 |
 
 다음 순서는 다음과 같다.
 
@@ -160,7 +160,7 @@ plugin-playground/
 ```bash
 claude plugin validate --strict plugins/friction-loop   # 플러그인
 claude plugin validate --strict .                       # 마켓플레이스
-cd plugins/friction-loop && claude plugin eval . --max-cost-usd 2   # 실제 모델을 부르므로 비용이 든다
+cd plugins/friction-loop && claude plugin eval . --scaffold --allow-tools "Bash(python3 *)" --max-cost-usd 2   # 실제 모델을 부르므로 비용이 든다
 ```
 
 새 플러그인은 `plugins/<이름>/`에 만들고 `.claude-plugin/marketplace.json`의 `plugins` 배열에 항목을 더한다.
@@ -170,11 +170,11 @@ cd plugins/friction-loop && claude plugin eval . --max-cost-usd 2   # 실제 모
 | 데이터 | 위치 | 다루는 방식 |
 |---|---|---|
 | 마찰 기록 | `~/.claude/plugins/data/<플러그인 ID>/friction.jsonl` | hook이 쓰고 `/friction-loop:improve`가 읽는다. 플러그인을 업데이트해도 남는다 |
-| 대화 기록 | `~/.claude/projects/<프로젝트>/*.jsonl` | `recent_prompts.py`가 읽기만 한다. Claude Code 설정 `cleanupPeriodDays`(기본 30일)가 지나면 지워진다 |
+| 대화 기록 | `~/.claude/projects/<프로젝트>/*.jsonl` | `recent_prompts.py`와 `recent_signals.py`가 읽기만 한다. Claude Code 설정 `cleanupPeriodDays`(기본 30일)가 지나면 지워진다 |
 | 결정 기록 | `docs/decisions.md` | `/friction-loop:improve`가 쓰고 git으로 관리한다 |
 
 - 마찰 기록과 대화 기록은 저장소에 들어오지 않는다.
-- 스크립트는 네트워크를 쓰지 않는다. 다만 `/friction-loop:improve`를 실행하면 마찰 내용과 프롬프트 발췌가 세션 컨텍스트에 들어가 모델로 전달된다.
+- 스크립트는 네트워크를 쓰지 않는다. 다만 `/friction-loop:improve`를 실행하면 마찰 내용, 프롬프트 발췌, 실패하거나 거절된 명령의 발췌가 세션 컨텍스트에 들어가 모델로 전달된다.
 
 ## 알려진 제약
 

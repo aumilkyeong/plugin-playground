@@ -2,7 +2,7 @@
 """최근 N일 동안 직접 입력한 프롬프트를 대화 기록에서 뽑는다 (/friction-loop:improve 수집 단계용).
 
 대화 기록: ~/.claude/projects/<프로젝트>/<세션>.jsonl (cleanupPeriodDays가 지나면 지워진다)
-읽기만 한다. 서브에이전트 기록(하위 폴더)과 '마찰:' 프롬프트는 제외한다.
+읽기만 한다. 서브에이전트 기록(하위 폴더), '마찰:' 프롬프트, 중단 표시, 압축 요약은 제외한다.
 """
 import argparse
 import datetime as dt
@@ -12,11 +12,27 @@ import os
 import re
 
 FRICTION = re.compile(r"^\s*(?:마찰|friction)\s*[:：]", re.IGNORECASE)
+# 중단 표시는 사용자가 입력한 말이 아니다. recent_signals.py가 따로 센다
+INTERRUPT = re.compile(r"^\[Request interrupted by user")
 HUMAN_SOURCES = {"typed", "suggestion_accepted"}
 
 
+def session_files(projects_dir, cutoff):
+    """cutoff 이후에 바뀐 세션 기록. 서브에이전트 기록은 하위 폴더에 있어 빠진다."""
+    for path in glob.glob(os.path.join(projects_dir, "*", "*.jsonl")):
+        try:
+            if dt.datetime.fromtimestamp(os.path.getmtime(path), dt.timezone.utc) >= cutoff:
+                yield path
+        except OSError:
+            continue
+
+
+def project_name(rec, path):
+    return os.path.basename((rec.get("cwd") or "").rstrip("/")) or os.path.basename(os.path.dirname(path))
+
+
 def prompt_text(rec):
-    if rec.get("type") != "user" or rec.get("isMeta"):
+    if rec.get("type") != "user" or rec.get("isMeta") or rec.get("isCompactSummary") or rec.get("isSidechain"):
         return None
     source = rec.get("promptSource")
     if source is not None and source not in HUMAN_SOURCES:
@@ -32,7 +48,7 @@ def prompt_text(rec):
         return None
     text = text.strip()
     # '<'로 시작하는 것은 슬래시 명령, 알림, 시스템 메시지다
-    if not text or text.startswith("<") or FRICTION.match(text):
+    if not text or text.startswith("<") or FRICTION.match(text) or INTERRUPT.match(text):
         return None
     return text
 
@@ -54,10 +70,8 @@ def main():
 
     cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=a.days)
     rows = []
-    for path in glob.glob(os.path.join(a.projects_dir, "*", "*.jsonl")):
+    for path in session_files(a.projects_dir, cutoff):
         try:
-            if dt.datetime.fromtimestamp(os.path.getmtime(path), dt.timezone.utc) < cutoff:
-                continue
             with open(path, encoding="utf-8", errors="replace") as f:
                 for line in f:
                     if '"user"' not in line:
@@ -70,8 +84,7 @@ def main():
                     ts = parse_ts(rec.get("timestamp"))
                     if text is None or ts is None or ts < cutoff:
                         continue
-                    project = os.path.basename((rec.get("cwd") or "").rstrip("/")) or os.path.basename(os.path.dirname(path))
-                    rows.append((ts, project, text))
+                    rows.append((ts, project_name(rec, path), text))
         except OSError:
             continue
 

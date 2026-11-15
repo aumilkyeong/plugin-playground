@@ -5,10 +5,12 @@
 1. **기록 한 줄**: 불편한 순간에 `마찰: <무엇이 불편했나>`를 입력한다. hook이 기록하고 Claude에게는 보내지 않으므로 토큰이 들지 않는다. `friction:`도 된다.
 2. **승인 한 번**: 일주일에 한 번 이 저장소에서 `/friction-loop:improve`를 실행하고, 제안 표에서 반영할 번호를 고른다.
 
+기록하지 않은 마찰도 검토할 때 대화 기록에서 찾는다. 직접 입력한 프롬프트에서는 반복 지시와 수정 요청을, 도구 호출 결과에서는 직접 답한 권한 확인, 권한 거절, 도구 오류, 중단을 모은다.
+
 ```
-마찰 기록 ──┐
-            ├─▶ /friction-loop:improve ─▶ 제안 표 ─▶ 승인 ─▶ plugins/ 변경 + eval ─▶ docs/decisions.md
-대화 기록 ──┘     (묶기·형태 선택)                                         (처리한 마찰 ID, 주간 지표)
+마찰 기록 ─────────────────┐
+                           ├─▶ /friction-loop:improve ─▶ 제안 표 ─▶ 승인 ─▶ plugins/ 변경 + eval ─▶ docs/decisions.md
+대화 기록(프롬프트·신호) ──┘     (묶기·형태 선택)                                         (처리한 마찰 ID, 주간 지표)
 ```
 
 ## 구성
@@ -18,6 +20,7 @@
 | `hooks/hooks.json` | `UserPromptSubmit` hook. `마찰:` 프롬프트를 기록하고 막는다 |
 | `scripts/friction.py` | 기록(`hook`, `add`)과 조회(`list`, `stats`) |
 | `scripts/recent_prompts.py` | 최근 N일 직접 입력한 프롬프트를 대화 기록에서 뽑는다 (읽기 전용) |
+| `scripts/recent_signals.py` | 최근 N일 사용자가 말하지 않은 마찰 신호(권한 확인·거절, 도구 오류, 중단)와 그 뒤 사용자의 첫마디를 뽑는다 (읽기 전용) |
 | `skills/improve/SKILL.md` | 주간 검토. 직접 불렀을 때만 돈다 |
 | `evals/` | 변경마다 재현 케이스가 하나씩 쌓인다 |
 

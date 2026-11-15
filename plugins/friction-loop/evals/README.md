@@ -7,6 +7,8 @@
 ```
 evals/<케이스 이름>/
 ├── prompt.md          # frontmatter(name, description, tags, max_turns, allowed_tools) + 사용자 프롬프트
+├── case.yaml          # (선택) context.scaffold_script처럼 prompt.md에 쓸 수 없는 설정
+├── fixture.sh         # (선택) scaffold_script. 빈 작업 폴더에서 시작해 필요한 파일을 만든다
 └── graders/
     ├── criteria.md    # type: llm. 본문이 판정 기준
     └── <이름>.md      # type: regex | tool_used | tool_order | file_exists
@@ -23,8 +25,11 @@ evals/<케이스 이름>/
 
 ```bash
 cd plugins/friction-loop
-claude plugin eval . --max-cost-usd 2
+claude plugin eval . --scaffold --allow-tools "Bash(python3 *)" --max-cost-usd 2
 ```
+
+- `--scaffold`: `case.yaml`의 `scaffold_script`를 실행해 작업 폴더를 준비한다. `improve-reads-signals`는 이 단계에서 시스템 저장소 모양의 폴더와 가짜 대화 기록을 만든다. 가짜 기록은 실행마다 새로 만드는 임시 홈 아래에만 생긴다.
+- `--allow-tools "Bash(python3 *)"`: 검토 skill이 수집 스크립트를 돌릴 수 있게 한다. 이 권한이 없으면 Bash가 세션에서 빠져서 수집 단계를 확인할 수 없다.
 
 새 케이스를 대화형으로 만들려면 `claude plugin eval init`, 빈 틀만 만들려면 `claude plugin eval init --bare <이름>`.
 
