@@ -26,6 +26,13 @@
       "description": "아이디어를 도식으로 보일 때 관계에 맞는 형식을 고르고, 그려진 결과를 맥락 없는 시청자로 시험해 고친다",
       "category": "productivity",
       "keywords": ["diagram", "visualization", "mermaid", "svg", "korean"]
+    },
+    {
+      "name": "ask-expert",
+      "source": "./plugins/ask-expert",
+      "description": "구조나 기술 선택을 정할 때 대화 맥락에 물들지 않은 전문가 agent에게 자문을 받고, 권장안이 달린 번호 결정으로 돌려준다",
+      "category": "productivity",
+      "keywords": ["architecture", "review", "trade-off", "adr", "korean"]
     }
   ]
 }
