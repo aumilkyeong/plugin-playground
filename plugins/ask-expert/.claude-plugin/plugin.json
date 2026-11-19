@@ -1,0 +1,14 @@
+{
+  "name": "ask-expert",
+  "displayName": "Ask Expert",
+  "version": "0.1.0",
+  "description": "구조나 기술 선택을 정할 때 대화 맥락에 물들지 않은 전문가 agent에게 코드와 제약만 넘겨 자문을 받고, 권장안이 달린 번호 결정으로 돌려준다. 첫 전문가는 소프트웨어 아키텍트(/ask-expert:architect)",
+  "author": {
+    "name": "aumilkyeong",
+    "url": "https://github.com/aumilkyeong"
+  },
+  "homepage": "https://github.com/aumilkyeong/plugin-playground/tree/main/plugins/ask-expert",
+  "repository": "https://github.com/aumilkyeong/plugin-playground",
+  "license": "MIT",
+  "keywords": ["architecture", "review", "trade-off", "adr", "korean"]
+}
